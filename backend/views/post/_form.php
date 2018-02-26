@@ -18,16 +18,47 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'tags')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'status')->textInput() ?>
+    <?php
+    // 第一种方法
+    // $psObject = \common\models\Poststatus::find()->all();
+    // $allStatus = \yii\helpers\ArrayHelper::map($psObject,'id','name');
 
-    <?= $form->field($model, 'create_time')->textInput() ?>
+    // 第二种方法
+    // $psArray = Yii::$app->db->createCommand('select id,name from poststatus')->queryAll();
+    // $allStatus = \yii\helpers\ArrayHelper::map($psArray,'id','name');
 
-    <?= $form->field($model, 'update_time')->textInput() ?>
+    // 第三种方法
+    // $allStatus = (new \yii\db\Query())
+    //     ->select(['name', 'id'])
+    //     ->from('poststatus')
+    //     ->indexBy('id')
+    //     ->column();
 
-    <?= $form->field($model, 'author_id')->textInput() ?>
+    // 第四种方法 推荐:结合第一和第三
+    // $allStatus = \common\models\Poststatus::find()
+    //     ->select(['name', 'id'])
+    //     ->orderBy('position')
+    //     ->indexBy('id')
+    //     ->column();
+    ?>
+
+    <?= $form->field($model, 'status')->dropDownList(
+        \common\models\Poststatus::find()
+            ->select(['name', 'id'])
+            ->orderBy('position')
+            ->indexBy('id')
+            ->column(),
+        ['prompt' => '请选择状态']) ?>
+
+    <?= $form->field($model, 'author_id')->dropDownList(
+        \common\models\Adminuser::find()
+            ->select(['nickname', 'id'])
+            ->indexBy('id')
+            ->column(),
+        ['prompt' => '请选择作者']) ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('保存', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
