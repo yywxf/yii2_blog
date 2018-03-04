@@ -124,4 +124,19 @@ class CommentController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+    /**
+     * 审核操作
+     * @author Fang Zenghua
+     * @param $id
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     */
+    public function actionApprove($id)
+    {
+        $model = $this->findModel($id);
+        if ($model->approve()) {  //审核
+            return $this->redirect(['index']);
+        }
+    }
 }

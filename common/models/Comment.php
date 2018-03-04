@@ -52,7 +52,7 @@ class Comment extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => '评论ID',
+            'id' => 'ID',
             'content' => '内容',
             'status' => '状态',
             'create_time' => '创建时间',
@@ -85,5 +85,56 @@ class Comment extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'userid']);
+    }
+
+    /**
+     * 获取截取后的内容
+     * @author Fang Zenghua
+     * @return string
+     */
+    public function getShortcontent()
+    {
+        $tmpStr = strip_tags($this->content);
+        $tmpLen = mb_strlen($tmpStr);
+        return mb_substr($tmpStr, 0, 10, 'utf-8') . ($tmpLen > 10 ? '...' : '');
+    }
+
+    /**
+     * 审核操作
+     * @author Fang Zenghua
+     * @return bool
+     */
+    public function approve()
+    {
+        $this->status = 2;  //设置评论状态为已审核
+        return $this->save() ? true : false;
+    }
+
+    /**
+     * 获取待审核评论数目
+     * @author Fang Zenghua
+     * @return int|string
+     */
+    public static function getPendingCommentCount()
+    {
+        return Comment::find()->where(['status' => 1])->count();
+    }
+
+    /**
+     * 重写方法处理创建时间
+     * @author Fang Zenghua
+     * @param bool $insert
+     * @return bool
+     */
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($insert) {
+                $this->create_time = time();
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 }
