@@ -17,15 +17,17 @@ return [
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
+            // 'cookieValidationKey' => 'dsaljqer234lj65fdjc',
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'common\models\Adminuser',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
         ],
         'session' => [
             // this is the name of the session cookie used for login on the backend
-            'name' => 'advanced-backend',
+            'name' => 'bolg-backend',
+            // 'savePath' => sys_get_temp_dir(),
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
