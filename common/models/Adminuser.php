@@ -58,9 +58,9 @@ class Adminuser extends ActiveRecord implements IdentityInterface
             'password_hash' => 'Password Hash',
             'password_reset_token' => 'Password Reset Token',
             'nickname' => '昵称',
-            'password' => 'Password',
+            'password' => '密码',
             'email' => 'Email',
-            'profile' => 'Profile',
+            'profile' => '简介',
         ];
     }
 
