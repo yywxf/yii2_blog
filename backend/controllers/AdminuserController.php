@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\models\ResetpwdForm;
 use backend\models\SignupForm;
 use Yii;
 use common\models\Adminuser;
@@ -126,5 +127,20 @@ class AdminuserController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionResetpwd($id)
+    {
+        $model = new ResetpwdForm();
+
+        if ($model->load(Yii::$app->request->post())) {
+            if($model->resetPassword($id)){
+                return $this->redirect(['index']);
+            }
+        }
+
+        return $this->render('resetpwd', [
+            'model' => $model,
+        ]);
     }
 }
