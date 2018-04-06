@@ -5,6 +5,7 @@ namespace backend\controllers;
 use Yii;
 use common\models\Post;
 use common\models\PostSearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -25,6 +26,24 @@ class PostController extends Controller
                 'actions' => [
                     'delete' => ['POST'],
                 ],
+            ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index', 'view'],
+                        'allow'   => true,
+                        'roles'   => ['?'], //访客用户
+                    ],
+                    [
+                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
+                        'allow'   => true,
+                        'roles'   => ['@'], //已认证用户
+                    ],
+                ],
+                // 'denyCallback' => function($rule,$action){
+                //     throw new \Exception('你没有权限！');//您没有执行此操作的权限。
+                // },
             ],
         ];
     }
