@@ -4,6 +4,8 @@ namespace backend\controllers;
 
 use backend\models\ResetpwdForm;
 use backend\models\SignupForm;
+use common\models\AuthAssignment;
+use common\models\AuthItem;
 use Yii;
 use common\models\Adminuser;
 use common\models\AdminuserSearch;
@@ -142,5 +144,40 @@ class AdminuserController extends Controller
         return $this->render('resetpwd', [
             'model' => $model,
         ]);
+    }
+
+    public function actionPrivilege($id)
+    {
+        // step1. 找出所有权限，提供给checkboxlist
+        $allPrivilege = AuthItem::find()->select(['name', 'description'])->where(['type' => 1])->orderBy('description')->all();
+
+        foreach ($allPrivilege as $pri) {
+            $allPrivilegesArray[$pri->name] = $pri->description;
+        }
+
+        // step2. 当前用户的权限
+        $authAssignments = AuthAssignment::find()->select(['item_name'])->where(['user_id'=>$id])->orderBy('item_name')->all();
+        $authAssignmentsArray = [];
+        foreach ($authAssignments as $authAssignment) {
+            array_push($authAssignmentsArray, $authAssignment->item_name);
+        }
+
+        // step3. 表单提交数据更新表
+        if (isset($_POST['newPri'])) {
+            AuthAssignment::deleteAll('user_id=:id', [':id' => $id]);
+            $newPri = $_POST['newPri'];
+            $arrlength = count($newPri);
+            for ($i = 0; $i < $arrlength; $i++) {
+                $aPri = new AuthAssignment();
+                $aPri->item_name = $newPri[$i];
+                $aPri->user_id = $id;
+                $aPri->created_at = time();
+                $aPri->save();
+            }
+            return $this->redirect(['index']);
+        }
+
+        // step4. 渲染checkBoxList表单
+        return $this->render('privilege', ['id' => $id, 'authAssignmentsArray' => $authAssignmentsArray, 'allPrivilegesArray' => $allPrivilegesArray]);
     }
 }
