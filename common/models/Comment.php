@@ -138,4 +138,15 @@ class Comment extends \yii\db\ActiveRecord
             return false;
         }
     }
+
+    /**
+     * 获取最近多条回复
+     * @author Fang Zenghua
+     * @param int $limit
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public static function findRecentComment($limit = 10)
+    {
+        return Comment::find()->where(['status' => 2])->orderBy('create_time desc')->limit($limit)->all();
+    }
 }
