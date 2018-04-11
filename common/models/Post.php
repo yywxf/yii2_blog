@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\helpers\Html;
 
 /**
  * This is the model class for table "post".
@@ -117,5 +118,52 @@ class Post extends \yii\db\ActiveRecord
     {
         parent::afterDelete();
         Tag::updateFrequency($this->tags,'');
+    }
+
+    /**
+     * 获取文章url
+     * @author Fang Zenghua
+     * @return string
+     */
+    public function getUrl()
+    {
+        return Yii::$app->urlManager->createUrl(['post/detail', 'id' => $this->id, 'title' => $this->title]);
+    }
+
+    /**
+     * 获取截取后的内容
+     * @author Fang Zenghua
+     * @param int $length
+     * @return string
+     */
+    public function getShortcontent($length = 288)
+    {
+        $tmpStr = strip_tags($this->content);
+        $tmpLen = mb_strlen($tmpStr);
+        return mb_substr($tmpStr, 0, $length, 'utf-8') . ($tmpLen > $length ? '...' : '');
+    }
+
+    /**
+     * 获取加链接后的文章标签
+     * @author Fang Zenghua
+     * @return array
+     */
+    public function getTagLinks()
+    {
+        $links = [];
+        foreach (Tag::string2array($this->tags) as $tag) {
+            $links[] = Html::a(Html::encode($tag), ['post/index', 'PostSearch[tags]' => $tag]);
+        }
+        return $links;
+    }
+
+    /**
+     * 获取评论数
+     * @author Fang Zenghua
+     * @return int|string
+     */
+    public function getCommentCount()
+    {
+        return Comment::find()->where(['post_id' => $this->id, 'status' => 2])->count();
     }
 }

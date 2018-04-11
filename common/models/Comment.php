@@ -90,13 +90,14 @@ class Comment extends \yii\db\ActiveRecord
     /**
      * 获取截取后的内容
      * @author Fang Zenghua
+     * @param int $length
      * @return string
      */
-    public function getShortcontent()
+    public function getShortcontent($length = 10)
     {
         $tmpStr = strip_tags($this->content);
         $tmpLen = mb_strlen($tmpStr);
-        return mb_substr($tmpStr, 0, 10, 'utf-8') . ($tmpLen > 10 ? '...' : '');
+        return mb_substr($tmpStr, 0, $length, 'utf-8') . ($tmpLen > $length ? '...' : '');
     }
 
     /**
