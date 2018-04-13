@@ -17,7 +17,7 @@ use frontend\components\RecentCommentsWidget;
         <div class="col-md-9">
 
             <ol class="breadcrumb">
-                <li><a href="<?=Yii::$app->homeUrl?>">首页</a></li>
+                <li><a href="<?= Yii::$app->homeUrl; ?>">首页</a></li>
                 <li>文章列表</li>
             </ol>
 

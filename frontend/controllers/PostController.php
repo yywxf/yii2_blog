@@ -4,6 +4,8 @@ namespace frontend\controllers;
 
 use common\models\Comment;
 use common\models\Tag;
+use common\models\User;
+use frontend\components\RecentCommentsWidget;
 use Yii;
 use common\models\Post;
 use common\models\PostSearch;
@@ -16,6 +18,8 @@ use yii\filters\VerbFilter;
  */
 class PostController extends Controller
 {
+    public $added = 0; // 0表示还没有新回复
+
     /**
      * @inheritdoc
      */
@@ -130,5 +134,43 @@ class PostController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    /**
+     * 文章详情页面
+     * @author Fang Zenghua
+     * @param $id
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionDetail($id)
+    {
+        // step1. 准备数据模型
+        $model = $this->findModel($id);
+        $tags = Tag::findTagWeights();
+        $recentComments = Comment::findRecentComment();
+
+        $user = User::findOne(Yii::$app->user->id);
+        $commentModel = new Comment();
+        $commentModel->userid = $user->id;
+        $commentModel->email = $user->email;
+
+        // step2. 提交评论
+        if ($commentModel->load(Yii::$app->request->post())) {
+            $commentModel->status = 1;  // 新评论默认状态 待审核
+            $commentModel->post_id = $id;
+            if ($commentModel->save()) {
+                $this->added = 1; // 新回复
+            }
+        }
+
+        // step3. 渲染视图
+        return $this->render('detail', [
+            'model'          => $model,
+            'tags'           => $tags,
+            'recentComments' => $recentComments,
+            'commentModel'   => $commentModel,
+            'added'          => $this->added,
+        ]);
     }
 }

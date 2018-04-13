@@ -73,6 +73,16 @@ class Post extends \yii\db\ActiveRecord
     }
 
     /**
+     * 获取已审核过的评论
+     * @author Fang Zenghua
+     * @return $this
+     */
+    public function getActiveComments()
+    {
+        return $this->hasMany(Comment::className(), ['post_id' => 'id'])->where(['status' => 2])->orderBy('id DESC');
+    }
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getAuthor()
