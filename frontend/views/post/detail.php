@@ -1,7 +1,6 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
 use frontend\components\TagsCloudWidget;
 use frontend\components\RecentCommentsWidget;
 use yii\helpers\Url;

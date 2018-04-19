@@ -39,14 +39,17 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
+        // url美化
         'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
+            'enablePrettyUrl' => true,//
+            'showScriptName' => false,//隐藏入口文件名index.php
+            'suffix' => '.html',
             'rules' => [
+                '<controller:\w+>/<id:\d+>' => '<controller>/detail',
+                'posts' => 'post/index',
             ],
         ],
-        */
+
     ],
     'params' => $params,
 ];

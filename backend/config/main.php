@@ -41,14 +41,17 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
+        // url美化
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
+            'suffix' => '.html',
             'rules' => [
+                '<controller:(post|comment)>s' => '<controller>/index',
+                '<controller:\w+>/<id:\d+>' => '<controller>/view',
+                '<controller:\w+>/<id:\d+>/<action:(create|update|delete)>' => '<controller>/<action>',
             ],
         ],
-        */
     ],
     'params' => $params,
 ];
