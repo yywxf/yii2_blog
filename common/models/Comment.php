@@ -10,6 +10,7 @@ use Yii;
  * @property int $id 评论ID
  * @property string $content 内容
  * @property int $status 状态
+ * @property int $remind 0:未提醒 1:已提醒
  * @property int $create_time 创建时间
  * @property int $userid 用户ID
  * @property string $email Email
@@ -38,7 +39,7 @@ class Comment extends \yii\db\ActiveRecord
         return [
             [['content', 'status', 'userid', 'email', 'post_id'], 'required'],
             [['content'], 'string'],
-            [['status', 'create_time', 'userid', 'post_id'], 'integer'],
+            [['status', 'remind', 'create_time', 'userid', 'post_id'], 'integer'],
             [['email', 'url'], 'string', 'max' => 128],
             [['post_id'], 'exist', 'skipOnError' => true, 'targetClass' => Post::className(), 'targetAttribute' => ['post_id' => 'id']],
             [['status'], 'exist', 'skipOnError' => true, 'targetClass' => Commentstatus::className(), 'targetAttribute' => ['status' => 'id']],
@@ -55,6 +56,7 @@ class Comment extends \yii\db\ActiveRecord
             'id' => 'ID',
             'content' => '内容',
             'status' => '状态',
+            'remind' => '是否提醒',
             'create_time' => '创建时间',
             'userid' => '用户ID',
             'email' => 'Email',

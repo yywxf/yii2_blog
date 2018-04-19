@@ -22,6 +22,10 @@ return [
           ],
     ],
     'components' => [
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            'useFileTransport' => false,// true只是生成邮件在runtime文件夹下
+        ],
         'log' => [
             'targets' => [
                 [
